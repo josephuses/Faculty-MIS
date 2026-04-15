@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty PDS Update Portal</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f9; color: #333; line-height: 1.6;}
+      .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+      .page { display: none; animation: fadeIn 0.4s; } .page.active { display: block; }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      h3 { color: #0056b3; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; margin-top: 0; }
+      h4 { margin-bottom: 10px; color: #495057; }
+      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+      .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+      label { font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px; color: #555;}
+      input, select, textarea { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;}
+      .dynamic-section { border: 1px solid #b8daff; background-color: #f8faff; padding: 15px; margin-bottom: 15px; border-radius: 5px; position: relative;}
+      .remove-btn { position: absolute; top: 10px; right: 10px; background: #dc3545; color: white; border: none; padding: 5px 10px; font-size: 12px; border-radius: 4px; cursor: pointer;}
+      .add-btn { background-color: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; margin-bottom: 20px;}
+      .nav-buttons { margin-top: 30px; display: flex; justify-content: space-between; border-top: 1px solid #eee; padding-top: 20px;}
+      .nav-btn { padding: 10px 20px; background-color: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 15px;}
+      .nav-btn:hover { background-color: #004494; } .submit-btn { background-color: #ff9800; }
+      .progress-bar { text-align: center; margin-bottom: 20px; font-weight: bold; color: #666; }
+      .loader { text-align: center; font-weight: bold; color: #0056b3; margin-bottom: 15px; display: none; }
+      .empty-tracker { background-color: #fff3cd; color: #856404; padding: 10px 15px; border-left: 5px solid #ffeeba; border-radius: 4px; margin-bottom: 20px; font-size: 13px; display: none; }
+      .portal-btn { padding: 8px 15px; background: white; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; font-weight:bold; margin: 5px;}
+      .portal-btn:hover { background: #f0f8ff; border-color: #0056b3; color: #0056b3;}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Faculty PDS Update Portal</h2>
+        <button type="button" class="portal-btn" onclick="logout()" style="color: #dc3545; border-color: #dc3545;">ðŸšª Log Out</button>
+      </div>
+      
+      <p style="margin-top:-10px; font-size: 14px;">Current Session: <strong id="displayEmail">Loading...</strong></p>
+      <div id="loadingStatus" class="loader">Fetching approved records...</div>
+      <div id="progressText" class="progress-bar">Step 1 of 6</div>
+
+      <form id="pdsForm">
+        
+        <div id="page1" class="page active">
+          <div id="emptyTracker1" class="empty-tracker"></div>
+          <h3>I. Personal Information</h3>
+          <div class="grid-3">
+            <div><label>Surname:</label><input type="text" name="Surname" required></div>
+            <div><label>First Name:</label><input type="text" name="First Name" required></div>
+            <div><label>Middle Name:</label><input type="text" name="Middle Name"></div>
+          </div>
+          <div class="grid-3">
+            <div><label>Name Extension (JR, SR):</label><input type="text" name="Name Extension (JR, SR)"></div>
+            <div><label>Date of Birth:</label><input type="date" name="Date of Birth" required></div>
+            <div><label>Place of Birth:</label><input type="text" name="Place of Birth"></div>
+          </div>
+          <div class="grid-3">
+            <div><label>Sex at Birth:</label><select name="Sex at Birth"><option value="">Select...</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
+            <div><label>Civil Status:</label><select name="Civil Status"><option value="">Select...</option><option value="Single">Single</option><option value="Married">Married</option><option value="Widowed">Widowed</option><option value="Separated">Separated</option><option value="Other">Other</option></select></div>
+            <div><label>Citizenship:</label><input type="text" name="Citizenship"></div>
+          </div>
+          <div class="grid-3">
+            <div><label>Dual Citizenship Details/Country:</label><input type="text" name="Dual Citizenship Details/Country"></div>
+            <div><label>Height (m):</label><input type="number" step="0.01" name="Height (m)"></div>
+            <div><label>Weight (kg):</label><input type="number" step="0.1" name="Weight (kg)"></div>
+          </div>
+          <div class="grid-3"><div><label>Blood Type:</label><input type="text" name="Blood Type"></div></div>
+          <hr><h4>Identification Numbers</h4>
+          <div class="grid-3">
+            <div><label>UMID ID NO.:</label><input type="text" name="UMID ID NO."></div>
+            <div><label>PAG-IBIG ID NO.:</label><input type="text" name="PAG-IBIG ID NO."></div>
+            <div><label>PHILHEALTH NO.:</label><input type="text" name="PHILHEALTH NO."></div>
+            <div><label>PhilSys Number (PSN):</label><input type="text" name="PhilSys Number (PSN)"></div>
+            <div><label>TIN NO.:</label><input type="text" name="TIN NO."></div>
+            <div><label>AGENCY EMPLOYEE NO.:</label><input type="text" name="AGENCY EMPLOYEE NO."></div>
+          </div>
+          <hr><h4>Residential Address</h4>
+          <div class="grid-3">
+            <div><label>House/Block/Lot No.:</label><input type="text" name="Res House/Block/Lot"></div>
+            <div><label>Street:</label><input type="text" name="Res Street"></div>
+            <div><label>Subdivision/Village:</label><input type="text" name="Res Subdivision/Village"></div>
+            <div><label>Barangay:</label><input type="text" name="Res Barangay"></div>
+            <div><label>City/Municipality:</label><input type="text" name="Res City/Municipality"></div>
+            <div><label>Province:</label><input type="text" name="Res Province"></div>
+            <div><label>ZIP Code:</label><input type="text" name="Res ZIP"></div>
+          </div>
+          <hr><h4>Permanent Address</h4>
+          <div class="grid-3">
+            <div><label>House/Block/Lot No.:</label><input type="text" name="Perm House/Block/Lot"></div>
+            <div><label>Street:</label><input type="text" name="Perm Street"></div>
+            <div><label>Subdivision/Village:</label><input type="text" name="Perm Subdivision/Village"></div>
+            <div><label>Barangay:</label><input type="text" name="Perm Barangay"></div>
+            <div><label>City/Municipality:</label><input type="text" name="Perm City/Municipality"></div>
+            <div><label>Province:</label><input type="text" name="Perm Province"></div>
+            <div><label>ZIP Code:</label><input type="text" name="Perm ZIP"></div>
+          </div>
+          <hr><h4>Contact Information</h4>
+          <div class="grid-3">
+            <div><label>Telephone No.:</label><input type="text" name="Telephone No."></div>
+            <div><label>Mobile No.:</label><input type="text" name="Mobile No." required></div>
+            <div><label>Alternative E-mail Address:</label><input type="email" name="Alternative E-mail Address"></div>
+          </div>
+        </div>
+
+        <div id="page2" class="page">
+          <div id="emptyTracker2" class="empty-tracker"></div>
+          <h3>II. Family Background</h3>
+          <h4>Spouse Information</h4>
+          <div class="grid-3">
+            <div><label>Spouse's Surname:</label><input type="text" name="Spouse Surname"></div>
+            <div><label>First Name:</label><input type="text" name="Spouse First Name"></div>
+            <div><label>Middle Name:</label><input type="text" name="Spouse Middle Name"></div>
+            <div><label>Name Extension (JR, SR):</label><input type="text" name="Spouse Name Ext"></div>
+            <div><label>Occupation:</label><input type="text" name="Spouse Occupation"></div>
+            <div><label>Employer/Business Name:</label><input type="text" name="Spouse Employer/Business"></div>
+          </div>
+          <div class="grid-2">
+            <div><label>Business Address:</label><input type="text" name="Spouse Business Address"></div>
+            <div><label>Telephone No.:</label><input type="text" name="Spouse Telephone No."></div>
+          </div>
+          <hr><h4>Parents Information</h4>
+          <div class="grid-3">
+            <div><label>Father's Surname:</label><input type="text" name="Father Surname"></div>
+            <div><label>Father's First Name:</label><input type="text" name="Father First Name"></div>
+            <div><label>Father's Middle Name:</label><input type="text" name="Father Middle Name"></div>
+            <div><label>Father's Name Extension:</label><input type="text" name="Father Name Ext"></div>
+          </div>
+          <br>
+          <div class="grid-3">
+            <div><label>Mother's Maiden Surname:</label><input type="text" name="Mother Maiden Surname"></div>
+            <div><label>Mother's First Name:</label><input type="text" name="Mother First Name"></div>
+            <div><label>Mother's Middle Name:</label><input type="text" name="Mother Middle Name"></div>
+          </div>
+          <hr><h4>Children</h4>
+          <div id="childrenContainer"></div>
+          <button type="button" class="add-btn" onclick="addDynamicRow('childrenContainer', childTemplate)">+ Add Child</button>
+        </div>
+
+        <div id="page3" class="page">
+          <div id="emptyTracker3" class="empty-tracker"></div>
+          <h3>III. Educational Background</h3>
+          <div id="educationContainer"></div>
+          <button type="button" class="add-btn" onclick="addDynamicRow('educationContainer', educationTemplate)">+ Add Educational Record</button>
+        </div>
+
+        <div id="page4" class="page">
+          <div id="emptyTracker4" class="empty-tracker"></div>
+          <h3>IV. Civil Service Eligibility</h3>
+          <div id="eligibilityContainer"></div>
+          <button type="button" class="add-btn" onclick="addDynamicRow('eligibilityContainer', eligibilityTemplate)">+ Add Eligibility</button>
+          <hr>
+          <h3>V. Work Experience</h3>
+          <div id="workContainer"></div>
+          <button type="button" class="add-btn" onclick="addDynamicRow('workContainer', workTemplate)">+ Add Work Experience</button>
+        </div>
+
+        <div id="page5" class="page">
+          <div id="emptyTracker5" class="empty-tracker"></div>
+          <h3>VI. Voluntary Work</h3>
+          <div id="voluntaryContainer"></div>
+          <button type="button" class="add-btn" onclick="addDynamicRow('voluntaryContainer', voluntaryTemplate)">+ Add Voluntary Work</button>
+          <hr>
+          <h3>VII. L&D / Training</h3>
+          <div id="trainingContainer"></div>
+          <button type="button" class="add-btn" onclick="addDynamicRow('trainingContainer', trainingTemplate)">+ Add Training</button>
+        </div>
+
+        <div id="page6" class="page">
+          <div id="emptyTracker6" class="empty-tracker"></div>
+          <h3>VIII. Other Information</h3>
+          <div id="otherInfoContainer"></div>
+          <button type="button" class="add-btn" onclick="addDynamicRow('otherInfoContainer', otherInfoTemplate)">+ Add Skill/Recognition/Membership</button>
+          <hr>
+          <h3>IX. References</h3>
+          <div id="referenceContainer"></div>
+          <button type="button" class="add-btn" onclick="addDynamicRow('referenceContainer', referenceTemplate)">+ Add Reference</button>
+          <hr>
+          <h3>X. Declarations (Questions 34 - 40)</h3>
+          <div class="dynamic-section">
+            <label>34a. Consanguinity 3rd deg?</label><select name="Q34a Consanguinity 3rd Deg"><option value="No">No</option><option value="Yes">Yes</option></select>
+            <label>34b. Consanguinity 4th deg?</label><select name="Q34b Consanguinity 4th Deg"><option value="No">No</option><option value="Yes">Yes</option></select>
+            <label>35a. Admin offense?</label><select name="Q35a Admin Offense"><option value="No">No</option><option value="Yes">Yes</option></select><input type="text" name="Q35a Details">
+            <label>35b. Criminally charged?</label><select name="Q35b Criminal Charge"><option value="No">No</option><option value="Yes">Yes</option></select>
+            <div class="grid-2"><input type="text" name="Q35b Date Filed" placeholder="Date Filed"><input type="text" name="Q35b Status" placeholder="Status"></div>
+            <label>36. Convicted of crime?</label><select name="Q36 Convicted"><option value="No">No</option><option value="Yes">Yes</option></select><input type="text" name="Q36 Details">
+            <label>37. Separated from service?</label><select name="Q37 Separated from Service"><option value="No">No</option><option value="Yes">Yes</option></select><input type="text" name="Q37 Details">
+            <label>38a. Election candidate last year?</label><select name="Q38a Election Candidate"><option value="No">No</option><option value="Yes">Yes</option></select><input type="text" name="Q38a Details">
+            <label>38b. Resigned to campaign?</label><select name="Q38b Resigned to Campaign"><option value="No">No</option><option value="Yes">Yes</option></select><input type="text" name="Q38b Details">
+            <label>39. Immigrant status?</label><select name="Q39 Immigrant"><option value="No">No</option><option value="Yes">Yes</option></select><input type="text" name="Q39 Details">
+            <label>40a. Indigenous group?</label><select name="Q40a Indigenous"><option value="No">No</option><option value="Yes">Yes</option></select><input type="text" name="Q40a Details">
+            <label>40b. PWD?</label><select name="Q40b PWD"><option value="No">No</option><option value="Yes">Yes</option></select><input type="text" name="Q40b ID">
+            <label>40c. Solo parent?</label><select name="Q40c Solo Parent"><option value="No">No</option><option value="Yes">Yes</option></select><input type="text" name="Q40c ID">
+          </div>
+          <hr>
+          <h3>XI. Government Issued ID</h3>
+          <div class="grid-3">
+            <div><label>ID Type:</label><input type="text" name="Govt Issued ID"></div>
+            <div><label>ID No.:</label><input type="text" name="ID/License/Passport No."></div>
+            <div><label>Date/Place Issuance:</label><input type="text" name="Date/Place of Issuance"></div>
+          </div>
+          <hr>
+          <div id="pdsActions" style="text-align: center; padding: 20px; background: #e9ecef; border-radius: 8px; margin-top: 20px;">
+            <h4 style="margin-top:0;">PDS Document Actions</h4>
+            <p style="font-size: 13px; color: #555;">These actions generate a PDF based on your CURRENTLY APPROVED data.</p>
+            <button type="button" class="portal-btn" onclick="triggerPDSAction('view')">ðŸ‘ï¸ View PDS</button>
+            <button type="button" class="portal-btn" onclick="triggerPDSAction('download')">â¬‡ï¸ Download PDF</button>
+            <button type="button" class="portal-btn" onclick="triggerPDSAction('email')">âœ‰ï¸ Send to Email</button>
+            <div id="actionStatus" style="margin-top: 10px; font-weight: bold; color: #0056b3; font-size: 14px;"></div>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" id="prevBtn" class="nav-btn" onclick="changePage(-1)" style="display:none;">&laquo; Previous</button>
+          <button type="button" id="nextBtn" class="nav-btn" onclick="changePage(1)">Next &raquo;</button>
+          <button type="button" id="submitBtn" class="nav-btn submit-btn" style="display:none;" onclick="submitForm()">Submit to Database</button>
+        </div>
+      </form>
+    </div>
+    
+    <script>
+      // 1. Emulate Login for Testing
+      const GLOBAL_USER_EMAIL = prompt("Enter an email for testing (e.g., faculty@test.com):") || "faculty@test.com";
+      document.getElementById("displayEmail").innerText = GLOBAL_USER_EMAIL;
+      const GLOBAL_SCRIPT_URL = "index.html";
+
+      // 2. Pagination Logic (Moved here from old JS_Logic so UI buttons work instantly)
+      let currentPage = 1;
+      const totalPages = 6;
+      function changePage(direction) {
+        document.getElementById('page' + currentPage).classList.remove('active');
+        currentPage += direction;
+        document.getElementById('page' + currentPage).classList.add('active');
+        
+        document.getElementById('prevBtn').style.display = (currentPage === 1) ? 'none' : 'inline-block';
+        document.getElementById('nextBtn').style.display = (currentPage === totalPages) ? 'none' : 'inline-block';
+        document.getElementById('submitBtn').style.display = (currentPage === totalPages) ? 'inline-block' : 'none';
+        document.getElementById('progressText').innerText = `Step ${currentPage} of ${totalPages}`;
+        window.scrollTo(0, 0);
+      }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
